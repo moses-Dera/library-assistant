@@ -202,32 +202,39 @@ const App: React.FC = () => {
     );
   }, [favorites]);
 
-  // Open book in modal if supported, and add to history
-  const handleReadInApp = useCallback((book: Book) => {
-    if (!book.readLink) return;
-    // Add to history (most recent first, unique by id)
+  // Add book to reading history
+  const addToHistory = useCallback((book: Book) => {
     setReadHistory(prev => {
       const filtered = prev.filter(b => b.id !== book.id);
       const updated = [book, ...filtered].slice(0, 30); // limit to 30
       localStorage.setItem('readHistory', JSON.stringify(updated));
       return updated;
     });
-    // Only support PDF or HTML
+  }, []);
+
+  // Handle opening a book for reading
+  const handleReadInApp = useCallback((book: Book) => {
+    if (!book.readLink) return;
+    
+    // Add to history regardless of how it's opened
+    addToHistory(book);
+    
+    // Determine how to open the book
     if (book.readLink.endsWith('.pdf')) {
       setReaderType('pdf');
       setReaderUrl(book.readLink);
       setReaderTitle(book.title);
       setReaderOpen(true);
-    } else if (book.readLink.endsWith('.htm') || book.readLink.endsWith('.html')) {
+    } else if (book.readLink.endsWith('.htm') || book.readLink.endsWith('.html') || book.readLink.includes('read.google.com')) {
       setReaderType('html');
       setReaderUrl(book.readLink);
       setReaderTitle(book.title);
       setReaderOpen(true);
     } else {
       // fallback: open in new tab
-      window.open(book.readLink, '_blank', 'noopener');
+      window.open(book.readLink, '_blank', 'noopener,noreferrer');
     }
-  }, []);
+  }, [addToHistory]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -318,14 +325,6 @@ const App: React.FC = () => {
               {books.map((book) => (
                 <BookCard key={book.id} book={book} onToggleFavorite={toggleFavorite} onReadInApp={handleReadInApp} />
               ))}
-      {/* Book Reader Modal */}
-      <BookReaderModal
-        open={readerOpen && !!readerUrl}
-        onClose={() => setReaderOpen(false)}
-        title={readerTitle}
-        url={readerUrl || ''}
-        type={readerType}
-      />
             </div>
           </>
         )}
@@ -337,6 +336,15 @@ const App: React.FC = () => {
           <p className="mt-1">Powered by Google Books, Open Library, Project Gutenberg, and Gemini API.</p>
         </div>
       </footer>
+
+      {/* Book Reader Modal */}
+      <BookReaderModal
+        open={readerOpen && !!readerUrl}
+        onClose={() => setReaderOpen(false)}
+        title={readerTitle}
+        url={readerUrl || ''}
+        type={readerType}
+      />
     </div>
   );
 };
