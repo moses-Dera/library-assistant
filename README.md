@@ -1,8 +1,6 @@
 # 📚 Library Assistant
 
-> A modern book discovery platform powered by AI, combining multiple book APIs with intelligent features for personalized reading recommendations.
-
-![Library Assistant Demo](demo.gif)
+> AI-powered smart library for discovering and reading books that match user interests, moods, and needs.
 
 <div align="center">
 
@@ -14,291 +12,29 @@
 </div>
 
 ## 🌟 Overview
+Library Assistant helps users find books tailored to their interests or moods using AI and multiple book APIs.  
+It supports real-time streaming results, mood-based recommendations, and AI-powered summaries.
 
-Library Assistant is a modern web application that revolutionizes book discovery by combining powerful search capabilities across multiple sources with AI-enhanced features. It provides real-time streaming results, mood-based recommendations, and location-aware searching to help users find their next perfect read.
+### ✨ Core Features
+- 🔍 Multi-source search (Google Books, Open Library, Project Gutenberg)
+- 🧠 Mood & interest-based recommendations
+- ⚡ Real-time results + deduplication
+- 📘 Read online or download soft copies
+- 🤖 AI summarization (Google Gemini)
+- 🌍 Location-aware results
+- 📱 Responsive, mobile-first design
 
-### Key Highlights
+## ⚙️ Stack
+**Frontend:** React 18 + TypeScript + TailwindCSS  
+**Build:** Vite + SWC  
+**APIs:** Google Books, Open Library, Project Gutenberg  
+**AI:** Google Gemini for summaries  
+**Optional:** Google Maps for location
 
-🚀 **Real-time Streaming Results**
-- Instant results appear as each source responds
-- Progressive loading for better UX
-- Smart deduplication across sources
-
-� **Intelligent Search**
-- Mood-based book recommendations
-- Location-aware results via Google Maps
-- Natural language query processing
-- AI-powered book summarization
-
-💼 **Professional Features**
-- Cross-platform compatibility
-- Mobile-first responsive design
-- Offline capability
-- Reading progress tracking
-
-## ✨ Features
-
-### 📚 Book Discovery
-- **Multi-source Search**
-  - Google Books (rich metadata)
-  - Open Library (academic works)
-  - Project Gutenberg (classics)
-- **Smart Filtering**
-  - Genre-based organization
-  - Author clustering
-  - Publication date sorting
-- **Rich Previews**
-  - Cover images
-  - Descriptions
-  - Reading links
-
-### 🤖 AI Integration
-- **Mood Analysis**
-  - Sentiment-based recommendations
-  - Reading mood matching
-  - Contextual suggestions
-- **Smart Summaries**
-  - AI-generated book summaries
-  - Key themes extraction
-  - Reading time estimates
-
-### 🎨 User Experience
-- **Modern Interface**
-  - Clean, intuitive design
-  - Responsive layouts
-  - Dark mode support
-- **Performance**
-  - Fast page loads
-  - Streaming results
-  - Optimized images
-
-## �️ Technical Architecture
-
-### Frontend Stack
-```
-React 18 + TypeScript
-└── Vite 4 + SWC (build system)
-    ├── TailwindCSS (styling)
-    ├── Axios (API client)
-    └── React Query (data fetching)
-```
-
-### Backend Services
-```
-📚 Book Sources
-├── Google Books API (primary source)
-├── Open Library API (academic)
-└── Project Gutenberg API (classics)
-
-🤖 AI Services
-├── Google Gemini API (summarization)
-└── Google Maps Platform (location)
-```
-
-### Development Tools
-- TypeScript 5.0 with strict mode
-- ESLint + Prettier
-- Husky + lint-staged
-- GitHub Actions CI/CD
-
-## � Quick Start
-
-### Prerequisites
-```bash
-node >= 18.0.0
-npm >= 9.0.0
-git
-```
-
-### Setup
-
-1️⃣ **Clone & Install**
+## 🚀 Quick Start
 ```bash
 git clone https://github.com/yourusername/library-assistant.git
 cd library-assistant
 npm install
-```
-
-2️⃣ **Configure Environment**
-```bash
-# Copy example env file
 cp .env.example .env
-
-# Edit .env with your API keys
-VITE_GEMINI_API_KEY=your_gemini_api_key        # Required
-VITE_GOOGLE_BOOKS_API_KEY=your_books_api_key   # Optional
-```
-
-3️⃣ **Start Development**
-```bash
-npm run dev                 # Start dev server
-npm run test               # Run tests
-npm run lint               # Check code style
-```
-
-4️⃣ **Build & Deploy**
-```bash
-npm run build              # Production build
-npm run preview           # Test production locally
-```
-
-📱 Access the app at `http://localhost:3000`
-
-## ⚙️ Configuration Guide
-
-### API Setup
-
-#### 🤖 Google Gemini API (Required)
-```bash
-# 1. Visit Google AI Studio
-https://makersuite.google.com/app/apikey
-
-# 2. Create API key
-# 3. Add to .env
-VITE_GEMINI_API_KEY=your_key_here
-```
-
-#### 📚 Google Books API (Optional)
-```bash
-# 1. Visit Google Cloud Console
-https://console.cloud.google.com/
-
-# 2. Create Project & Enable Books API
-# 3. Generate API key
-# 4. Add to .env
-VITE_GOOGLE_BOOKS_API_KEY=your_key_here
-```
-
-### Environment Variables
-
-| Variable | Required | Purpose | Example |
-|----------|----------|---------|---------|
-| `VITE_GEMINI_API_KEY` | ✅ | AI features | `AIza...` |
-| `VITE_GOOGLE_BOOKS_API_KEY` | ❌ | Books API quota | `AIza...` |
-
-### Performance Tuning
-
-```typescript
-// src/config.ts
-export const CONFIG = {
-  CACHE_DURATION: 3600,    // Cache lifetime (seconds)
-  MAX_RESULTS: 100,       // Results per search
-  STREAM_CHUNK: 10,       // Books per stream update
-  DEBOUNCE_MS: 300       // Search input delay
-}
-
-## � Development Guide
-
-### Available Scripts
-
-```bash
-# Development
-npm run dev           # Start dev server
-npm run test         # Run test suite
-npm run test:watch   # Test in watch mode
-
-# Code Quality
-npm run lint         # Check code style
-npm run lint:fix     # Auto-fix lint issues
-npm run format       # Format code
-npm run typecheck    # Check types
-
-# Production
-npm run build        # Build for production
-npm run preview     # Test production build
-```
-
-### Project Structure
-```
-src/
-├── components/      # React components
-├── hooks/           # Custom React hooks
-├── services/        # API & external services
-├── stores/          # State management
-├── types/           # TypeScript definitions
-└── utils/           # Helper functions
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-### 1. Setup Development Environment
-```bash
-git clone https://github.com/yourusername/library-assistant.git
-cd library-assistant
-npm install
 npm run dev
-```
-
-### 2. Create a Branch
-```bash
-git checkout -b feature/amazing-feature
-```
-
-### 3. Make Changes
-- Follow style guide
-- Add tests
-- Update documentation
-
-### 4. Submit PR
-```bash
-git commit -m "feat: add amazing feature"
-git push origin feature/amazing-feature
-# Open PR via GitHub
-```
-
-## � API Documentation
-
-### Book Search
-```typescript
-// Stream results from all sources
-searchBooksStreaming(
-  query: string,
-  onResults: (books: Book[], source: string) => void
-): Promise<void>
-
-// Get combined results
-searchBooks(
-  query: string,
-  summarize?: boolean
-): Promise<Book[]>
-```
-
-### AI Features
-```typescript
-// Get AI-powered book summary
-summarizeBookWithGemini(
-  book: Book
-): Promise<string>
-
-// Check if query needs location
-isLocationAwareQuery(
-  query: string
-): boolean
-```
-
-## �📝 Legal
-
-### License
-This project is licensed under the MIT License - see [LICENSE](LICENSE)
-
-### Privacy
-- We don't store personal data
-- API keys are never shared
-- Local storage only for preferences
-
-## 🙏 Credits
-
-### Core Technologies
-- [React](https://reactjs.org/) - UI framework
-- [Vite](https://vitejs.dev/) - Build tool
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-- [TailwindCSS](https://tailwindcss.com/) - Styling
-
-### APIs & Services
-- [Google Books API](https://developers.google.com/books)
-- [Open Library](https://openlibrary.org/developers/api)
-- [Project Gutenberg](https://www.gutenberg.org/)
-- [Google Gemini](https://deepmind.google/technologies/gemini/)
-- [Google Maps Platform](https://developers.google.com/maps)
