@@ -5,9 +5,10 @@ import type { Book } from '../types';
 interface BookCardProps {
   book: Book;
   onToggleFavorite: (bookId: string) => void;
+  onReadInApp?: (book: Book) => void;
 }
 
-const BookCard: React.FC<BookCardProps> = ({ book, onToggleFavorite }) => {
+const BookCard: React.FC<BookCardProps> = ({ book, onToggleFavorite, onReadInApp }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform transform hover:scale-105 duration-300">
       <div className="p-4 grow flex flex-col">
@@ -52,14 +53,25 @@ const BookCard: React.FC<BookCardProps> = ({ book, onToggleFavorite }) => {
         <div className="mt-auto flex justify-between items-center text-xs text-gray-500">
           <span>Source: {book.source}</span>
           {book.readLink && (
-            <a
-              href={book.readLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 border-2 border-blue-600 rounded-md p-2 hover:text-blue-800 font-medium transition-colors duration-200"
-            >
-              Read/Download
-            </a>
+            <>
+              {(book.readLink.endsWith('.pdf') || book.readLink.endsWith('.htm') || book.readLink.endsWith('.html')) ? (
+                <button
+                  onClick={() => onReadInApp && onReadInApp(book)}
+                  className="text-blue-600 border-2 border-blue-600 rounded-md p-2 hover:text-blue-800 font-medium transition-colors duration-200"
+                >
+                  Read in App
+                </button>
+              ) : (
+                <a
+                  href={book.readLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 border-2 border-blue-600 rounded-md p-2 hover:text-blue-800 font-medium transition-colors duration-200"
+                >
+                  Read/Download
+                </a>
+              )}
+            </>
           )}
         </div>
       </div>

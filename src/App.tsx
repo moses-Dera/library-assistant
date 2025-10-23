@@ -9,6 +9,8 @@ import { MOOD_MAP } from './constants';
 import SearchBar from './components/SearchBar';
 import BookCard from './components/BookCard';
 import LoadingSpinner from './components/LoadingSpinner';
+import BookReaderModal from './components/BookReaderModal';
+import ReadHistoryModal from './components/ReadHistoryModal';
 
 const App: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -35,6 +37,20 @@ const App: React.FC = () => {
   // Search query states
   const [lastRawQuery, setLastRawQuery] = useState<string | null>(null);
   const [, setCurrentEffectiveQuery] = useState<string | null>(null);
+
+
+  // Book reader modal state
+  const [readerOpen, setReaderOpen] = useState(false);
+  const [readerUrl, setReaderUrl] = useState<string | null>(null);
+  const [readerTitle, setReaderTitle] = useState<string>('');
+  const [readerType, setReaderType] = useState<'pdf' | 'html'>('html');
+
+  // Read history modal state
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [readHistory, setReadHistory] = useState<Book[]>(() => {
+    const saved = localStorage.getItem('readHistory');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Save favorites persistently
   useEffect(() => {
@@ -186,16 +202,58 @@ const App: React.FC = () => {
     );
   }, [favorites]);
 
+  // Open book in modal if supported, and add to history
+  const handleReadInApp = useCallback((book: Book) => {
+    if (!book.readLink) return;
+    // Add to history (most recent first, unique by id)
+    setReadHistory(prev => {
+      const filtered = prev.filter(b => b.id !== book.id);
+      const updated = [book, ...filtered].slice(0, 30); // limit to 30
+      localStorage.setItem('readHistory', JSON.stringify(updated));
+      return updated;
+    });
+    // Only support PDF or HTML
+    if (book.readLink.endsWith('.pdf')) {
+      setReaderType('pdf');
+      setReaderUrl(book.readLink);
+      setReaderTitle(book.title);
+      setReaderOpen(true);
+    } else if (book.readLink.endsWith('.htm') || book.readLink.endsWith('.html')) {
+      setReaderType('html');
+      setReaderUrl(book.readLink);
+      setReaderTitle(book.title);
+      setReaderOpen(true);
+    } else {
+      // fallback: open in new tab
+      window.open(book.readLink, '_blank', 'noopener');
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="bg-linear-to-r from-blue-600 to-indigo-700 text-white py-6 shadow-lg">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight">Smart Library Assistant</h1>
-          <p className="mt-2 text-lg text-blue-100">
-            Find books that match your mood, interests, or specific topics.
-          </p>
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between">
+          <div className="text-center sm:text-left">
+            <h1 className="text-4xl font-extrabold tracking-tight">Smart Library Assistant</h1>
+            <p className="mt-2 text-lg text-blue-100">
+              Find books that match your mood, interests, or specific topics.
+            </p>
+          </div>
+          <button
+            onClick={() => setHistoryOpen(true)}
+            className="mt-4 sm:mt-0 bg-white bg-opacity-20 hover:bg-opacity-40 text-blue-100 border border-blue-200 px-4 py-2 rounded-lg font-semibold shadow transition"
+          >
+            📖 Read History
+          </button>
         </div>
       </header>
+      {/* Read History Modal */}
+      <ReadHistoryModal
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        history={readHistory}
+        onReadInApp={handleReadInApp}
+      />
 
       <SearchBar
         onSearch={handleSearch}
@@ -258,8 +316,16 @@ const App: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Book Recommendations</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {books.map((book) => (
-                <BookCard key={book.id} book={book} onToggleFavorite={toggleFavorite} />
+                <BookCard key={book.id} book={book} onToggleFavorite={toggleFavorite} onReadInApp={handleReadInApp} />
               ))}
+      {/* Book Reader Modal */}
+      <BookReaderModal
+        open={readerOpen && !!readerUrl}
+        onClose={() => setReaderOpen(false)}
+        title={readerTitle}
+        url={readerUrl || ''}
+        type={readerType}
+      />
             </div>
           </>
         )}
